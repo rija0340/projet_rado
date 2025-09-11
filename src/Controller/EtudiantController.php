@@ -20,10 +20,11 @@ class EtudiantController extends AbstractController
      */
     public function index(EtudiantRepository $etudiantRepository): Response
     {
-        return $this->render('admin/etudiant/index.html.twig', [
+        return $this->render('accueil/index.html.twig', [
             'etudiants' => $etudiantRepository->findAll(),
         ]);
     }
+
 
     /**
      * @Route("/new", name="app_etudiant_new", methods={"GET", "POST"})
