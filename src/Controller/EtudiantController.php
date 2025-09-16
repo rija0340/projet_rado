@@ -20,7 +20,7 @@ class EtudiantController extends AbstractController
      */
     public function index(EtudiantRepository $etudiantRepository): Response
     {
-        return $this->render('accueil/index.html.twig', [
+        return $this->render('admin/etudiant/index.html.twig', [
             'etudiants' => $etudiantRepository->findAll(),
         ]);
     }

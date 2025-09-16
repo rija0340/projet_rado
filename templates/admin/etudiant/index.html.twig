@@ -4,41 +4,56 @@
 {% endblock %}
 
 {% block body %}
-	<h1>Etudiant index</h1>
+	<div class="card w-100">
+		<div class="card-title pb-2 pl-2">
+			<h4>Liste des étudiants</h4>
+		</div>
+		<div class="card-body ">
+			<div class="table-responsive">
+				<table class="table table-hover ">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Nom complet</th>
+							<th>Sexe</th>
+							<th>Date de naissance</th>
+							<th>Téléphone</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for etudiant in etudiants %}
+							<tr>
+								<th scope="row">{{ etudiant.id }}</th>
+								<td>{{ etudiant.nom }}
+									{{ etudiant.prenom }}</td>
+								<td>
+									{% if etudiant.sexe == 'M' %}
+										<span class="badge badge-primary">Homme</span>
+									{% elseif etudiant.sexe == 'F' %}
+										<span class="badge badge-success">Femme</span>
+									{% else %}
+										<span class="badge badge-secondary">N/A</span>
+									{% endif %}
+								</td>
+								<td>{{ etudiant.dateNaissance ? etudiant.dateNaissance|date('Y-m-d') : '' }}</td>
+								<td class="color-primary">{{ etudiant.telephone }}</td>
+								<td>
+									<a href="{{ path('app_etudiant_show', {'id': etudiant.id}) }}" class="btn btn-sm btn-info">Show</a>
+									<a href="{{ path('app_etudiant_edit', {'id': etudiant.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="6">Aucun étudiant trouvé</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Id</th>
-				<th>Nom</th>
-				<th>Prenom</th>
-				<th>Date_naissance</th>
-				<th>Sexe</th>
-				<th>Telephone</th>
-				<th>actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for etudiant in etudiants %}
-				<tr>
-					<td>{{ etudiant.id }}</td>
-					<td>{{ etudiant.nom }}</td>
-					<td>{{ etudiant.prenom }}</td>
-					<td>{{ etudiant.dateNaissance ? etudiant.dateNaissance|date('Y-m-d') : '' }}</td>
-					<td>{{ etudiant.sexe }}</td>
-					<td>{{ etudiant.telephone }}</td>
-					<td>
-						<a href="{{ path('app_etudiant_show', {'id': etudiant.id}) }}">show</a>
-						<a href="{{ path('app_etudiant_edit', {'id': etudiant.id}) }}">edit</a>
-					</td>
-				</tr>
-			{% else %}
-				<tr>
-					<td colspan="7">no records found</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
 
 	<a href="{{ path('app_etudiant_new') }}">Create new</a>
 {% endblock %}
