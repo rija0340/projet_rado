@@ -1,0 +1,258 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Dashboard - School Management System{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block header_actions %}
+    <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-sm btn-ghost">
+            <i data-feather="calendar" class="w-4 h-4"></i>
+            Cette semaine
+        </label>
+        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+            <li><a>Aujourd'hui</a></li>
+            <li><a>Cette semaine</a></li>
+            <li><a>Ce mois</a></li>
+            <li><a>Cette année</a></li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title">Étudiants</h2>
+                        <p class="text-3xl font-bold">{{ total_students ?? 1254 }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-primary/10 text-primary">
+                        <i data-feather="users" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500">+12% ce mois</div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title">Enseignants</h2>
+                        <p class="text-3xl font-bold">{{ total_teachers ?? 84 }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-secondary/10 text-secondary">
+                        <i data-feather="user-check" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500">+3 nouveaux ce mois</div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title">Classes</h2>
+                        <p class="text-3xl font-bold">{{ total_classes ?? 32 }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-accent/10 text-accent">
+                        <i data-feather="book" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500">5 nouvelles ce semestre</div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title">Présence</h2>
+                        <p class="text-3xl font-bold">{{ attendance_rate ?? 94 }}%</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-info/10 text-info">
+                        <i data-feather="calendar" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500">Moyenne aujourd'hui</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Activity Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Recent Students -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">Étudiants Récents</h2>
+                <div class="overflow-x-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Classe</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for etudiant in recent_students|default([
+                                {nom: 'Rakoto', prenom: 'Jean', classe: {nom: 'Terminale A'}, active: true},
+                                {nom: 'Rabe', prenom: 'Marie', classe: {nom: '1ère B'}, active: true},
+                                {nom: 'Andry', prenom: 'Paul', classe: {nom: '2nde C'}, active: false}
+                            ]) %}
+                            <tr>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="w-8 rounded-full">
+                                                <img src="https://images.unsplash.com/photo-{{ 1500000000000 + (loop.index * 12345) }}?w=100&h=100&fit=crop&crop=face" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="font-bold">{{ etudiant.nom }} {{ etudiant.prenom }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ etudiant.classe.nom }}</td>
+                                <td>
+                                    {% if etudiant.active %}
+                                        <span class="badge badge-success">Actif</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">En attente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-actions justify-end">
+                    <a href="{{ path('app_etudiant_index') }}" class="btn btn-ghost btn-sm">Voir tous</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Events -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">Événements à Venir</h2>
+                <div class="space-y-4">
+                    {% for event in upcoming_events|default([
+                        {date: '15 MAR', title: 'Réunion Parents-Enseignants', time: '9:00 - 12:00'},
+                        {date: '20 MAR', title: 'Journée Sportive', time: 'Toute la journée'},
+                        {date: '25 MAR', title: 'Examens de Mi-Semestre', time: 'Toute la semaine'}
+                    ]) %}
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="text-xl font-bold">{{ event.date|split(' ')[0] }}</div>
+                            <div class="text-sm">{{ event.date|split(' ')[1] }}</div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">{{ event.title }}</h3>
+                            <p class="text-sm text-gray-500">{{ event.time }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-ghost btn-sm">Voir calendrier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- Enrollment Chart -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">Inscriptions par Mois</h2>
+                <div class="h-64 flex items-end justify-center space-x-2">
+                    {% for month in 1..12 %}
+                    <div class="flex flex-col items-center">
+                        <div class="bg-primary rounded-t w-8 mb-2" style="height: {{ random(20, 100) }}px;"></div>
+                        <span class="text-xs text-gray-500">{{ month }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Distribution -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">Répartition par Niveau</h2>
+                <div class="space-y-3">
+                    {% for niveau in class_distribution|default([
+                        {nom: 'Terminale', count: 145, percentage: 35},
+                        {nom: '1ère', count: 128, percentage: 30},
+                        {nom: '2nde', count: 98, percentage: 25},
+                        {nom: '3ème', count: 45, percentage: 10}
+                    ]) %}
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>{{ niveau.nom }}</span>
+                            <span>{{ niveau.count }} étudiants</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: {{ niveau.percentage }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <h2 class="card-title">Activité Récente</h2>
+            <div class="space-y-4">
+                {% for activity in recent_activities|default([
+                    {type: 'inscription', user: 'Rakoto Jean', action: 's\'est inscrit en Terminale A', time: 'Il y a 2h', icon: 'user-plus'},
+                    {type: 'paiement', user: 'Rabe Marie', action: 'a effectué un paiement de 150,000 Ar', time: 'Il y a 4h', icon: 'credit-card'},
+                    {type: 'classe', user: 'Admin', action: 'a créé la classe 1ère D', time: 'Il y a 1 jour', icon: 'book'},
+                    {type: 'enseignant', user: 'Professeur Martin', action: 'a été assigné à la classe Terminale B', time: 'Il y a 2 jours', icon: 'user-check'}
+                ]) %}
+                <div class="flex items-center gap-4 p-3 rounded-lg hover:bg-base-200 transition-colors">
+                    <div class="p-2 rounded-full bg-primary/10 text-primary">
+                        <i data-feather="{{ activity.icon }}" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm">
+                            <span class="font-medium">{{ activity.user }}</span>
+                            {{ activity.action }}
+                        </p>
+                        <p class="text-xs text-gray-500">{{ activity.time }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="card-actions justify-end">
+                <button class="btn btn-ghost btn-sm">Voir toute l'activité</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // Simple chart animation
+    document.addEventListener('DOMContentLoaded', function() {
+        const bars = document.querySelectorAll('.bg-primary.rounded-t');
+        bars.forEach((bar, index) => {
+            const height = bar.style.height;
+            bar.style.height = '0px';
+            setTimeout(() => {
+                bar.style.transition = 'height 0.8s ease-out';
+                bar.style.height = height;
+            }, index * 100);
+        });
+    });
+</script>
+{% endblock %}

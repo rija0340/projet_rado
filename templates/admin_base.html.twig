@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="garden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}School Management System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.4/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        tailwind.config = {
+            daisyui: {
+                themes: [
+                    {
+                        garden: {
+                            "primary": "#4f46e5",
+                            "secondary": "#f43f5e",
+                            "accent": "#10b981",
+                            "neutral": "#1f2937",
+                            "base-100": "#f3f4f6",
+                            "info": "#3b82f6",
+                            "success": "#10b981",
+                            "warning": "#f59e0b",
+                            "error": "#ef4444",
+                        },
+                    },
+                ],
+            },
+        }
+    </script>
+    <style>
+        .sidebar {
+            transition: all 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 40;
+        }
+        .sidebar-collapsed {
+            width: 80px !important;
+        }
+        .sidebar-collapsed .sidebar-header {
+            padding: 1rem 0.5rem;
+        }
+        .sidebar-collapsed .sidebar-header img {
+            width: 2rem;
+            height: 2rem;
+        }
+        .sidebar-collapsed .sidebar-header h1,
+        .sidebar-collapsed .sidebar-header p {
+            display: none;
+        }
+        .sidebar-collapsed .menu span {
+            display: none;
+        }
+        .sidebar-collapsed details summary span {
+            display: none;
+        }
+        .sidebar-collapsed details ul {
+            display: none;
+        }
+        .sidebar-collapsed .sidebar-footer > div:last-child {
+            display: none;
+        }
+        .sidebar-collapsed .sidebar-footer .avatar {
+            width: 2rem;
+        }
+        .content-area {
+            transition: margin-left 0.3s ease;
+            margin-left: 320px;
+        }
+        .content-area.sidebar-collapsed {
+            margin-left: 80px;
+        }
+        .navbar {
+            position: fixed !important;
+            top: 0;
+            right: 0;
+            left: 320px;
+            z-index: 30;
+            transition: left 0.3s ease;
+        }
+        .navbar.sidebar-collapsed {
+            left: 80px;
+        }
+        .main-content {
+            margin-top: 4rem;
+            padding: 1.5rem;
+        }
+        .mobile-hidden {
+            display: none;
+        }
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                transform: translateX(-100%);
+                z-index: 50;
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .content-area {
+                margin-left: 0 !important;
+            }
+            .navbar {
+                left: 0 !important;
+            }
+            .mobile-hidden {
+                display: block;
+            }
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Sidebar -->
+    <div class="sidebar menu p-4 w-80 h-full bg-base-100 text-base-content" id="sidebar">
+        <div class="sidebar-header flex items-center gap-2 mb-8">
+            <div class="avatar">
+                <div class="w-12 rounded-full">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                </div>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold">SchoolSys</h1>
+                <p class="text-xs text-gray-500">Admin Dashboard</p>
+            </div>
+        </div>
+                
+        {% block sidebar_menu %}
+        <ul class="space-y-1">
+            <li>
+                <a href="#">
+                    <i data-feather="home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <details {% if app.request.get('_route') starts with 'app_etudiant' %}open{% endif %}>
+                    <summary>
+                        <i data-feather="users"></i>
+                        <span>Étudiants</span>
+                    </summary>
+                    <ul>
+                        <li><a href="{{ path('app_etudiant_index') }}" class="{% if app.request.get('_route') == 'app_etudiant_index' %}active{% endif %}">Tous les étudiants</a></li>
+                        <li><a href="{{ path('app_etudiant_new') }}" class="{% if app.request.get('_route') == 'app_etudiant_new' %}active{% endif %}">Ajouter nouveau</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details>
+                    <summary>
+                        <i data-feather="user-check"></i>
+                        <span>Enseignants</span>
+                    </summary>
+                    <ul>
+                        <li><a>Tous les enseignants</a></li>
+                        <li><a>Ajouter nouveau</a></li>
+                        <li><a>Assigner classes</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <details>
+                    <summary>
+                        <i data-feather="book"></i>
+                        <span>Classes</span>
+                    </summary>
+                    <ul>
+                        <li><a>Toutes les classes</a></li>
+                        <li><a>Ajouter nouvelle</a></li>
+                        <li><a>Emploi du temps</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li>
+                <a>
+                    <i data-feather="calendar"></i>
+                    <span>Présences</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i data-feather="file-text"></i>
+                    <span>Rapports</span>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <i data-feather="settings"></i>
+                    <span>Paramètres</span>
+                </a>
+            </li>
+        </ul>
+        {% endblock %}
+        
+        <div class="sidebar-footer mt-auto pt-4 border-t">
+            <div class="flex items-center gap-3">
+                <div class="avatar">
+                    <div class="w-10 rounded-full">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-medium">Admin User</h3>
+                    <p class="text-xs text-gray-500">admin@schoolsys.com</p>
+                </div>
+            </div>
+            <button class="btn btn-ghost btn-sm w-full mt-2">
+                <i data-feather="log-out"></i>
+                Déconnexion
+            </button>
+        </div>
+    </div>
+
+    <!-- Main content area -->
+    <div class="content-area" id="content-area">
+        <!-- Navbar -->
+        <div class="navbar bg-base-100 shadow-sm" id="navbar">
+            <div class="flex-none">
+                <button class="btn btn-square btn-ghost" id="sidebar-toggle">
+                    <i data-feather="menu"></i>
+                </button>
+            </div>
+            <div class="flex-1">
+                <a class="btn btn-ghost normal-case text-xl">SchoolSys</a>
+            </div>
+            <div class="flex-none">
+                {% block navbar_actions %}
+                <div class="dropdown dropdown-end">
+                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                        </div>
+                    </label>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a>Profile</a></li>
+                        <li><a>Settings</a></li>
+                        <li><a>Logout</a></li>
+                    </ul>
+                </div>
+                {% endblock %}
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <main class="main-content">
+            {% block header %}
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-2xl font-bold">{% block page_title %}Dashboard{% endblock %}</h1>
+                <div class="flex gap-2">
+                    {% block header_actions %}{% endblock %}
+                </div>
+            </div>
+            {% endblock %}
+            
+            {% block body %}{% endblock %}
+        </main>
+    </div>
+    
+    <script>
+        feather.replace();
+        
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const contentArea = document.getElementById('content-area');
+            const navbar = document.getElementById('navbar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            
+            // Toggle sidebar collapse
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('sidebar-collapsed');
+                contentArea.classList.toggle('sidebar-collapsed');
+                navbar.classList.toggle('sidebar-collapsed');
+            });
+            
+            // Handle mobile responsiveness
+            function handleMobileView() {
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.add('mobile-hidden');
+                } else {
+                    sidebar.classList.remove('mobile-hidden');
+                }
+            }
+            
+            // Mobile toggle for small screens
+            sidebarToggle.addEventListener('click', function() {
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.toggle('mobile-open');
+                }
+            });
+            
+            // Close mobile sidebar when clicking outside
+            contentArea.addEventListener('click', function() {
+                if (window.innerWidth < 1024) {
+                    sidebar.classList.remove('mobile-open');
+                }
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', handleMobileView);
+            handleMobileView();
+        });
+    </script>
+    
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

@@ -40,10 +40,10 @@
     _this.$nano.nanoScroller({ preventPageScrolling: true });
 
     // sidebar toggle
-    $('.sidebar-toggle').on( 'click', function(e) {
-      e.preventDefault();
-      _this.togglesidebar();
-    });
+    // $('.sidebar-toggle').on( 'click', function(e) {
+    //   e.preventDefault();
+    //   _this.togglesidebar();
+    // });
 
     // hide sidebar when push content overlay
     _this.$content.on( 'click', function() {
