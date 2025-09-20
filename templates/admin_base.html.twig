@@ -149,6 +149,18 @@
                 </details>
             </li>
             <li>
+                <details {% if app.request.get('_route') starts with 'app_inscription' %}open{% endif %}>
+                    <summary>
+                        <i data-feather="users"></i>
+                        <span>Inscription</span>
+                    </summary>
+                    <ul>
+                        <li><a href="{{ path('app_inscription_index') }}" class="{% if app.request.get('_route') == 'app_inscription_index' %}active{% endif %}">Liste inscription</a></li>
+                        {# <li><a href="{{ path('app_inscription_new') }}" class="{% if app.request.get('_route') == 'app_inscription_new' %}active{% endif %}">Ajouter nouveau</a></li> #}
+                    </ul>
+                </details>
+            </li>
+            <li>
                 <details>
                     <summary>
                         <i data-feather="user-check"></i>
