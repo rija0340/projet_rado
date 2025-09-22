@@ -131,4 +131,9 @@ class AnneeScolaire
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->libelle ?? 'Année Scolaire ' . $this->id;
+    }
 }

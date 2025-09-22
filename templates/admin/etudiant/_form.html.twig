@@ -1,4 +1,50 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'card bg-base-100 shadow'}}) }}
+    <div class="card-body">
+        <div class="space-y-4">
+            <div class="form-control">
+                {{ form_label(form.nom, null, {'label_attr': {'class': 'label'}}) }}
+                <div class="label-text-alt text-error">
+                    {{ form_errors(form.nom) }}
+                </div>
+                {{ form_widget(form.nom) }}
+            </div>
+
+            <div class="form-control">
+                {{ form_label(form.prenom, null, {'label_attr': {'class': 'label'}}) }}
+                <div class="label-text-alt text-error">
+                    {{ form_errors(form.prenom) }}
+                </div>
+                {{ form_widget(form.prenom) }}
+            </div>
+
+            <div class="form-control">
+                {{ form_label(form.date_naissance, null, {'label_attr': {'class': 'label'}}) }}
+                <div class="label-text-alt text-error">
+                    {{ form_errors(form.date_naissance) }}
+                </div>
+                {{ form_widget(form.date_naissance) }}
+            </div>
+
+            <div class="form-control">
+                {{ form_label(form.sexe, null, {'label_attr': {'class': 'label'}}) }}
+                <div class="label-text-alt text-error">
+                    {{ form_errors(form.sexe) }}
+                </div>
+                {{ form_widget(form.sexe) }}
+            </div>
+
+            <div class="form-control">
+                {{ form_label(form.telephone, null, {'label_attr': {'class': 'label'}}) }}
+                <div class="label-text-alt text-error">
+                    {{ form_errors(form.telephone) }}
+                </div>
+                {{ form_widget(form.telephone) }}
+            </div>
+        </div>
+
+        <div class="card-actions justify-end mt-6">
+            <a href="{{ path('app_etudiant_index') }}" class="btn btn-ghost">Annuler</a>
+            <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+        </div>
+    </div>
 {{ form_end(form) }}

@@ -1,12 +1,20 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}New AnneeScolaire
-{% endblock %}
+{% block title %}Nouvelle Année Scolaire - School Management System{% endblock %}
+
+{% block page_title %}Ajouter une Année Scolaire{% endblock %}
 
 {% block body %}
-	<h1>Create new AnneeScolaire</h1>
-
-	{{ include('admin/annee_scolaire/_form.html.twig') }}
-
-	<a href="{{ path('app_annee_scolaire_index') }}">back to list</a>
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <h2 class="card-title">Informations de l'année scolaire</h2>
+            
+            {{ include('admin/annee_scolaire/_form.html.twig') }}
+            
+            <div class="card-actions justify-end mt-6">
+                <a href="{{ path('app_annee_scolaire_index') }}" class="btn btn-ghost">Annuler</a>
+                <button type="submit" class="btn btn-primary" form="annee_scolaire_form">Créer l'année scolaire</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}

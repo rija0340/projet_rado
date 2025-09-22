@@ -1,4 +1,34 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="mt-4">
+        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+    </div>
 {{ form_end(form) }}
+
+<script>
+    // JavaScript to dynamically filter options based on selections
+    document.addEventListener('DOMContentLoaded', function() {
+        const niveauSelect = document.getElementById('tarif_scolaire_niveau');
+        const anneeScolaireSelect = document.getElementById('tarif_scolaire_anneeScolaire');
+        
+        // Store original options
+        const originalNiveauOptions = Array.from(niveauSelect.options);
+        const originalAnneeScolaireOptions = Array.from(anneeScolaireSelect.options);
+        
+        // Function to filter options based on existing tariffs
+        function filterOptions() {
+            // In a real implementation, you would make AJAX calls to get filtered options
+            // For now, we'll just add a visual indicator
+            console.log('Filtering options based on selections');
+        }
+        
+        // Add event listeners to update options when selections change
+        if (niveauSelect) {
+            niveauSelect.addEventListener('change', filterOptions);
+        }
+        
+        if (anneeScolaireSelect) {
+            anneeScolaireSelect.addEventListener('change', filterOptions);
+        }
+    });
+</script>

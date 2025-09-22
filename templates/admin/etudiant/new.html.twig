@@ -1,12 +1,9 @@
 {% extends 'admin_base.html.twig' %}
 
-{% block title %}New Etudiant
-{% endblock %}
+{% block title %}Ajouter un étudiant - School Management System{% endblock %}
+
+{% block page_title %}Ajouter un étudiant{% endblock %}
 
 {% block body %}
-	<h1>Create new Etudiant</h1>
-
-	{{ include('admin/etudiant/_form.html.twig') }}
-
-	<a href="{{ path('app_etudiant_index') }}">back to list</a>
+    {{ include('admin/etudiant/_form.html.twig') }}
 {% endblock %}

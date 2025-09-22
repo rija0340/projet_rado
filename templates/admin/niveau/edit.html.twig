@@ -1,14 +1,29 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Edit Niveau
-{% endblock %}
+{% block title %}Modifier Niveau - School Management System{% endblock %}
+
+{% block page_title %}Modifier un Niveau{% endblock %}
 
 {% block body %}
-	<h1>Edit Niveau</h1>
-
-	{{ include('admin/niveau/_form.html.twig', {'button_label': 'Update'}) }}
-
-	<a href="{{ path('app_niveau_index') }}">back to list</a>
-
-	{{ include('admin/niveau/_delete_form.html.twig') }}
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <h2 class="card-title">Informations du niveau</h2>
+            
+            {{ include('admin/niveau/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+            
+            <div class="card-actions justify-end mt-6">
+                <a href="{{ path('app_niveau_index') }}" class="btn btn-ghost">Annuler</a>
+                <button type="submit" class="btn btn-primary" form="niveau_form">Mettre à jour</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow mt-6">
+        <div class="card-body">
+            <h2 class="card-title text-error">Zone de danger</h2>
+            <p>La suppression d'un niveau est irréversible et peut affecter les classes et les tarifs associés.</p>
+            
+            {{ include('admin/niveau/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

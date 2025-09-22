@@ -1,0 +1,244 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Détails de l'Inscription - School Management System{% endblock %}
+
+{% block page_title %}Détails de l'Inscription{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('admin_inscription_index') }}" class="btn btn-ghost">
+        <i data-feather="arrow-left" class="w-4 h-4"></i>
+        Retour à la liste
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Student Information -->
+        <div class="card bg-base-100 shadow lg:col-span-2">
+            <div class="card-body">
+                <h2 class="card-title">Informations sur l'Étudiant</h2>
+                <div class="flex items-center gap-6 mb-6">
+                    <div class="avatar">
+                        <div class="w-24 rounded-full">
+                            <img src="https://images.unsplash.com/photo-{{ 1500000000000 + (inscription.etudiant.id * 12345) }}?w=200&h=200&fit=crop&crop=face" alt="Avatar" />
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold">{{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom }}</h3>
+                        <p class="text-gray-500">ID: {{ inscription.etudiant.id }}</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Date de naissance</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            {{ inscription.etudiant.dateNaissance ? inscription.etudiant.dateNaissance|date('d/m/Y') : 'Non renseigné' }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Sexe</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            {% if inscription.etudiant.sexe == 'M' %}
+                                <span class="badge badge-info">Homme</span>
+                            {% elseif inscription.etudiant.sexe == 'F' %}
+                                <span class="badge badge-success">Femme</span>
+                            {% else %}
+                                <span class="badge badge-ghost">Non renseigné</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-control md:col-span-2">
+                        <label class="label">
+                            <span class="label-text">Téléphone</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            {{ inscription.etudiant.telephone ?? 'Non renseigné' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Inscription Information -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">Détails de l'Inscription</h2>
+                
+                <div class="space-y-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Statut</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            <div class="badge {{ inscription.statusBadgeClass }} gap-2">
+                                <i data-feather="info" class="w-4 h-4"></i>
+                                {{ inscription.statusLabel }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Date d'inscription</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            {{ inscription.dateInscription|date('d/m/Y H:i') }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Année scolaire</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            {{ inscription.anneeScolaire.libelle }}
+                            ({{ inscription.anneeScolaire.dateDebut|date('d/m/Y') }} - {{ inscription.anneeScolaire.dateFin|date('d/m/Y') }})
+                        </div>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Classe</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            {{ inscription.classe.nom }} ({{ inscription.classe.niveau.nom }})
+                        </div>
+                    </div>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Total payé</span>
+                        </label>
+                        <div class="px-4 py-2 bg-base-200 rounded-lg">
+                            <span class="text-xl font-bold">{{ inscription.totalPaid|number_format(2, ',', ' ') }} Ar</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions based on status -->
+                <div class="card-actions justify-end mt-6">
+                    {% if inscription.statut == 'pending' %}
+                        <form method="post" action="{{ path('admin_inscription_confirm', {'id': inscription.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir confirmer cette inscription ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('confirm' ~ inscription.id) }}">
+                            <button type="submit" class="btn btn-success">
+                                <i data-feather="check" class="w-4 h-4"></i>
+                                Confirmer
+                            </button>
+                        </form>
+                        
+                        <button class="btn btn-error" onclick="document.getElementById('cancel-modal').showModal();">
+                            <i data-feather="x" class="w-4 h-4"></i>
+                            Annuler
+                        </button>
+                    {% elseif inscription.statut == 'confirmed' %}
+                        <button class="btn btn-info" disabled>
+                            <i data-feather="check-circle" class="w-4 h-4"></i>
+                            Inscription confirmée
+                        </button>
+                    {% elseif inscription.statut == 'cancelled' %}
+                        <button class="btn btn-error" disabled>
+                            <i data-feather="x-circle" class="w-4 h-4"></i>
+                            Inscription annulée
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payments Table -->
+    <div class="card bg-base-100 shadow mt-6">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title">Paiements</h2>
+                <button class="btn btn-primary btn-sm">
+                    <i data-feather="plus" class="w-4 h-4"></i>
+                    Ajouter un paiement
+                </button>
+            </div>
+            
+            {% if inscription.paiements|length > 0 %}
+            <div class="overflow-x-auto">
+                <table class="table table-zebra">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Mode de paiement</th>
+                            <th>Référence</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paiement in inscription.paiements %}
+                            <tr>
+                                <td>{{ paiement.datePaiement|date('d/m/Y') }}</td>
+                                <td>
+                                    {% if paiement.type == 'inscription' %}
+                                        <span class="badge badge-primary">Inscription</span>
+                                    {% elseif paiement.type == 'ecolage' %}
+                                        <span class="badge badge-secondary">Écolage</span>
+                                    {% else %}
+                                        <span class="badge badge-ghost">Autre</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ paiement.modePaiement }}</td>
+                                <td>{{ paiement.reference ?? 'N/A' }}</td>
+                                <td class="font-bold">{{ paiement.montant|number_format(2, ',', ' ') }} Ar</td>
+                                <td>
+                                    {% if paiement.statut == 'confirmed' %}
+                                        <span class="badge badge-success">Confirmé</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">En attente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-8">
+                <i data-feather="dollar-sign" class="w-12 h-12 text-gray-300 mx-auto mb-4"></i>
+                <p class="text-gray-500">Aucun paiement enregistré pour cette inscription</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Cancel Confirmation Modal -->
+    <dialog id="cancel-modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Annuler l'inscription</h3>
+            <p class="py-4">Êtes-vous sûr de vouloir annuler cette inscription ? Cette action ne peut pas être annulée.</p>
+            
+            <form method="post" action="{{ path('admin_inscription_cancel', {'id': inscription.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('cancel' ~ inscription.id) }}">
+                <div class="form-control mb-4">
+                    <label class="label">
+                        <span class="label-text">Raison de l'annulation (optionnel)</span>
+                    </label>
+                    <textarea name="reason" class="textarea textarea-bordered" placeholder="Entrez la raison de l'annulation"></textarea>
+                </div>
+                
+                <div class="modal-action">
+                    <form method="dialog">
+                        <button class="btn">Annuler</button>
+                    </form>
+                    <button type="submit" class="btn btn-error">Confirmer l'annulation</button>
+                </div>
+            </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+{% endblock %}

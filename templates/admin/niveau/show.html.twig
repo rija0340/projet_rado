@@ -1,35 +1,51 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Niveau
-{% endblock %}
+{% block title %}Détails Niveau - School Management System{% endblock %}
+
+{% block page_title %}Détails du Niveau{% endblock %}
 
 {% block body %}
-	<h1>Niveau</h1>
-
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Id</th>
-				<td>{{ niveau.id }}</td>
-			</tr>
-			<tr>
-				<th>Nom</th>
-				<td>{{ niveau.nom }}</td>
-			</tr>
-			<tr>
-				<th>Description</th>
-				<td>{{ niveau.description }}</td>
-			</tr>
-			<tr>
-				<th>Ordre</th>
-				<td>{{ niveau.ordre }}</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<a href="{{ path('app_niveau_index') }}">back to list</a>
-
-	<a href="{{ path('app_niveau_edit', {'id': niveau.id}) }}">edit</a>
-
-	{{ include('admin/niveau/_delete_form.html.twig') }}
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ niveau.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Nom</th>
+                            <td>{{ niveau.nom }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ niveau.description }}</td>
+                        </tr>
+                        <tr>
+                            <th>Ordre</th>
+                            <td>{{ niveau.ordre }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card-actions justify-end mt-6">
+                <a href="{{ path('app_niveau_index') }}" class="btn btn-ghost">Retour à la liste</a>
+                <a href="{{ path('app_niveau_edit', {'id': niveau.id}) }}" class="btn btn-primary">
+                    <i data-feather="edit"></i>
+                    Modifier
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow mt-6">
+        <div class="card-body">
+            <h2 class="card-title text-error">Zone de danger</h2>
+            <p>La suppression d'un niveau est irréversible et peut affecter les classes et les tarifs associés.</p>
+            
+            {{ include('admin/niveau/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

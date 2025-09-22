@@ -1,39 +1,62 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Niveau index{% endblock %}
+{% block title %}Niveaux - School Management System{% endblock %}
+
+{% block page_title %}Gestion des Niveaux{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('app_niveau_new') }}" class="btn btn-primary">
+        <i data-feather="plus"></i>
+        Ajouter un niveau
+    </a>
+{% endblock %}
 
 {% block body %}
-    <h1>Niveau index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>Description</th>
-                <th>Ordre</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for niveau in niveaux %}
-            <tr>
-                <td>{{ niveau.id }}</td>
-                <td>{{ niveau.nom }}</td>
-                <td>{{ niveau.description }}</td>
-                <td>{{ niveau.ordre }}</td>
-                <td>
-                    <a href="{{ path('app_niveau_show', {'id': niveau.id}) }}">show</a>
-                    <a href="{{ path('app_niveau_edit', {'id': niveau.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_niveau_new') }}">Create new</a>
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <div class="overflow-x-auto">
+                <table class="table table-zebra w-full">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Ordre</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for niveau in niveaux %}
+                        <tr>
+                            <td>{{ niveau.id }}</td>
+                            <td>{{ niveau.nom }}</td>
+                            <td>{{ niveau.description }}</td>
+                            <td>{{ niveau.ordre }}</td>
+                            <td>
+                                <div class="flex gap-2">
+                                    <a href="{{ path('app_niveau_show', {'id': niveau.id}) }}" class="btn btn-sm btn-info">
+                                        <i data-feather="eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_niveau_edit', {'id': niveau.id}) }}" class="btn btn-sm btn-warning">
+                                        <i data-feather="edit"></i>
+                                    </a>
+                                    <form method="post" action="{{ path('app_niveau_delete', {'id': niveau.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce niveau?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ niveau.id) }}">
+                                        <button class="btn btn-sm btn-error">
+                                            <i data-feather="trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">Aucun niveau trouvé</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

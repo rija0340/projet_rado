@@ -1,0 +1,173 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Nouvelle Inscription - School Management System{% endblock %}
+
+{% block page_title %}Nouvelle Inscription{% endblock %}
+
+{% block body %}
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            {{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Existing Student Section -->
+                    <div class="form-control">
+                        {{ form_label(form.etudiant, null, {'label_attr': {'class': 'label'}}) }}
+                        {{ form_widget(form.etudiant, {'attr': {'class': 'select select-bordered w-full'}}) }}
+                        <div class="label-text-alt text-info mt-2">
+                            Sélectionnez un étudiant existant ou laissez vide pour en créer un nouveau
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Student Section -->
+                <div id="new-student-section" class="card bg-base-200 mt-4" style="display: none;">
+                    <div class="card-body">
+                        <h3 class="card-title">Informations sur le nouvel étudiant</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="form-control">
+                                {{ form_label(form.new_student.nom, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.new_student.nom, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                            </div>
+                            
+                            <div class="form-control">
+                                {{ form_label(form.new_student.prenom, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.new_student.prenom, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                            </div>
+                            
+                            <div class="form-control">
+                                {{ form_label(form.new_student.date_naissance, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.new_student.date_naissance, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                            </div>
+                            
+                            <div class="form-control">
+                                {{ form_label(form.new_student.sexe, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.new_student.sexe, {'attr': {'class': 'select select-bordered w-full'}}) }}
+                            </div>
+                            
+                            <div class="form-control md:col-span-2">
+                                {{ form_label(form.new_student.telephone, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.new_student.telephone, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Year Selection -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-control">
+                        {{ form_label(form.anneeScolaire, null, {'label_attr': {'class': 'label'}}) }}
+                        {{ form_widget(form.anneeScolaire, {'attr': {'class': 'select select-bordered w-full'}}) }}
+                    </div>
+                </div>
+
+                <!-- Class Selection -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="form-control">
+                        {{ form_label(form.classe, null, {'label_attr': {'class': 'label'}}) }}
+                        {{ form_widget(form.classe, {'attr': {'class': 'select select-bordered w-full'}}) }}
+                    </div>
+                </div>
+
+                <!-- Payment Section -->
+                <div class="card bg-base-200 mt-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Paiement</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="form-control">
+                                {{ form_label(form.payment_amount, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.payment_amount, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                            </div>
+                            
+                            <div class="form-control">
+                                {{ form_label(form.payment_mode, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.payment_mode, {'attr': {'class': 'select select-bordered w-full'}}) }}
+                            </div>
+                            
+                            <div class="form-control">
+                                {{ form_label(form.payment_reference, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.payment_reference, {'attr': {'class': 'input input-bordered w-full'}}) }}
+                            </div>
+                            
+                            <div class="form-control">
+                                {{ form_label(form.payment_type, null, {'label_attr': {'class': 'label'}}) }}
+                                {{ form_widget(form.payment_type, {'attr': {'class': 'select select-bordered w-full'}}) }}
+                            </div>
+                        </div>
+                        
+                        <!-- Expected Fees Display -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Frais d'inscription attendus</span>
+                                </label>
+                                <div class="input input-bordered w-full flex items-center" id="expected-registration-fee">
+                                    0 Ar
+                                </div>
+                            </div>
+                            
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Frais de scolarité attendus</span>
+                                </label>
+                                <div class="input input-bordered w-full flex items-center" id="expected-tuition-fee">
+                                    0 Ar
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {{ form_widget(form.expected_registration_fee, {'attr': {'id': 'expected-registration-fee-hidden'}}) }}
+                        {{ form_widget(form.expected_tuition_fee, {'attr': {'id': 'expected-tuition-fee-hidden'}}) }}
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="card-actions justify-end mt-6">
+                    <a href="{{ path('app_inscription_index') }}" class="btn btn-ghost">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Créer l'inscription</button>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const existingStudentSelect = document.getElementById('inscription_etudiant');
+        const newStudentSection = document.getElementById('new-student-section');
+        const anneeScolaireSelect = document.getElementById('inscription_anneeScolaire');
+        const classeSelect = document.getElementById('inscription_classe');
+        const expectedRegistrationFeeDisplay = document.getElementById('expected-registration-fee');
+        const expectedTuitionFeeDisplay = document.getElementById('expected-tuition-fee');
+        const expectedRegistrationFeeHidden = document.getElementById('expected-registration-fee-hidden');
+        const expectedTuitionFeeHidden = document.getElementById('expected-tuition-fee-hidden');
+        
+        function toggleNewStudentSection() {
+            if (existingStudentSelect.value === '') {
+                newStudentSection.style.display = 'block';
+            } else {
+                newStudentSection.style.display = 'none';
+            }
+        }
+        
+        toggleNewStudentSection();
+        existingStudentSelect.addEventListener('change', toggleNewStudentSection);
+        
+        // Function to update expected fees display
+        function updateExpectedFees() {
+            const registrationFee = expectedRegistrationFeeHidden.value || 0;
+            const tuitionFee = expectedTuitionFeeHidden.value || 0;
+            
+            expectedRegistrationFeeDisplay.textContent = parseFloat(registrationFee).toLocaleString('fr-FR') + ' Ar';
+            expectedTuitionFeeDisplay.textContent = parseFloat(tuitionFee).toLocaleString('fr-FR') + ' Ar';
+        }
+        
+        // Initialize the display
+        updateExpectedFees();
+        
+        // Listen for changes in hidden fields
+        expectedRegistrationFeeHidden.addEventListener('change', updateExpectedFees);
+        expectedTuitionFeeHidden.addEventListener('change', updateExpectedFees);
+    });
+</script>
+{% endblock %}

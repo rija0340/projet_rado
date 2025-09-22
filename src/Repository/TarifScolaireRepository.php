@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\TarifScolaire;
+use App\Entity\Niveau;
+use App\Entity\AnneeScolaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +39,67 @@ class TarifScolaireRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * Find a tariff by niveau and anneeScolaire combination
+     *
+     * @param \App\Entity\Niveau $niveau
+     * @param \App\Entity\AnneeScolaire $anneeScolaire
+     * @return TarifScolaire|null
+     */
+    public function findOneByNiveauAndAnneeScolaire($niveau, $anneeScolaire): ?TarifScolaire
+    {
+        return $this->findOneBy([
+            'niveau' => $niveau,
+            'anneeScolaire' => $anneeScolaire
+        ]);
+    }
+
+    /**
+     * Find all niveaux that have tariffs for a given anneeScolaire
+     *
+     * @param AnneeScolaire $anneeScolaire
+     * @param Niveau|null $exclude Optional niveau to exclude from results
+     * @return array Array of Niveau entities
+     */
+    public function findUsedNiveauxForAnneeScolaire(AnneeScolaire $anneeScolaire, ?Niveau $exclude = null): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->select('n')
+            ->join('t.niveau', 'n')
+            ->where('t.anneeScolaire = :anneeScolaire')
+            ->setParameter('anneeScolaire', $anneeScolaire);
+
+        if ($exclude) {
+            $qb->andWhere('t.niveau != :exclude')
+               ->setParameter('exclude', $exclude);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Find all anneeScolaires that have tariffs for a given niveau
+     *
+     * @param Niveau $niveau
+     * @param AnneeScolaire|null $exclude Optional anneeScolaire to exclude from results
+     * @return array Array of AnneeScolaire entities
+     */
+    public function findUsedAnneeScolairesForNiveau(Niveau $niveau, ?AnneeScolaire $exclude = null): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->select('a')
+            ->join('t.anneeScolaire', 'a')
+            ->where('t.niveau = :niveau')
+            ->setParameter('niveau', $niveau);
+
+        if ($exclude) {
+            $qb->andWhere('t.anneeScolaire != :exclude')
+               ->setParameter('exclude', $exclude);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**

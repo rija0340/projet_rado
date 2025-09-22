@@ -1,0 +1,155 @@
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Administration - School Management System{% endblock %}
+
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block body %}
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title text-sm">Total Niveaux</h2>
+                        <p class="text-2xl font-bold">{{ niveaux|length }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-primary/10 text-primary">
+                        <i data-feather="layers" class="w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title text-sm">Total Classes</h2>
+                        <p class="text-2xl font-bold">{{ classes|length }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-info/10 text-info">
+                        <i data-feather="book" class="w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title text-sm">Années Scolaires</h2>
+                        <p class="text-2xl font-bold">{{ anneesScolaires|length }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-success/10 text-success">
+                        <i data-feather="calendar" class="w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="card-title text-sm">Tarifs Scolaires</h2>
+                        <p class="text-2xl font-bold">{{ tarifScolaires|length }}</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-warning/10 text-warning">
+                        <i data-feather="dollar-sign" class="w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Niveaux Section -->
+    <div class="card bg-base-100 shadow mb-6">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title">Niveaux</h2>
+                <a href="{{ path('app_niveau_new') }}" class="btn btn-primary btn-sm">
+                    <i data-feather="plus" class="w-4 h-4"></i>
+                    Ajouter Niveau
+                </a>
+            </div>
+            
+            {% include 'generic/_list.html.twig' with {
+                'items': niveaux,
+                'headers': ['ID', 'Nom'],
+                'fields': ['id', 'nom'],
+                'edit_route': 'app_niveau_edit',
+                'delete_route': 'app_niveau_delete',
+                'show_view': false
+            } %}
+        </div>
+    </div>
+
+    <!-- Classes Section -->
+    <div class="card bg-base-100 shadow mb-6">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title">Classes</h2>
+                <a href="{{ path('app_classe_new') }}" class="btn btn-primary btn-sm">
+                    <i data-feather="plus" class="w-4 h-4"></i>
+                    Ajouter Classe
+                </a>
+            </div>
+            
+            {% include 'generic/_list.html.twig' with {
+                'items': classes,
+                'headers': ['ID', 'Nom', 'Niveau'],
+                'fields': ['id', 'nom', 'niveau.nom'],
+                'edit_route': 'app_classe_edit',
+                'delete_route': 'app_classe_delete',
+                'show_view': false
+            } %}
+        </div>
+    </div>
+
+    <!-- Années Scolaires Section -->
+    <div class="card bg-base-100 shadow mb-6">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title">Années Scolaires</h2>
+                <a href="{{ path('app_annee_scolaire_new') }}" class="btn btn-primary btn-sm">
+                    <i data-feather="plus" class="w-4 h-4"></i>
+                    Ajouter Année Scolaire
+                </a>
+            </div>
+            
+            {% include 'generic/_list.html.twig' with {
+                'items': anneesScolaires,
+                'headers': ['ID', 'Libellé', 'Date de début', 'Date de fin'],
+                'fields': ['id', 'libelle', 'dateDebut', 'dateFin'],
+                'edit_route': 'app_annee_scolaire_edit',
+                'delete_route': 'app_annee_scolaire_delete',
+                'show_view': false
+            } %}
+        </div>
+    </div>
+
+    <!-- Tarifs Scolaires Section -->
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title">Tarifs Scolaires</h2>
+                <a href="{{ path('app_tarif_scolaire_new') }}" class="btn btn-primary btn-sm">
+                    <i data-feather="plus" class="w-4 h-4"></i>
+                    Ajouter Tarif Scolaire
+                </a>
+            </div>
+            
+            {% include 'generic/_list.html.twig' with {
+                'items': tarifScolaires,
+                'headers': ['ID', 'Niveau', 'Année Scolaire', 'Écolage', 'Inscription', 'Autres Frais'],
+                'fields': ['id', 'niveau.nom', 'anneeScolaire.libelle', 'montantEcolage', 'montantInscription', 'autresFrais'],
+                'edit_route': 'app_tarif_scolaire_edit',
+                'delete_route': 'app_tarif_scolaire_delete',
+                'view_route': 'app_tarif_scolaire_show',
+                'show_view': true
+            } %}
+        </div>
+    </div>
+{% endblock %}

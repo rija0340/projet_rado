@@ -1,0 +1,149 @@
+{# templates/generic/_list.html.twig #}
+
+<div class="card bg-base-100 shadow">
+    <div class="card-body">
+        
+        {# Header avec titre, recherche et filtre #}
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="card-title">{{ title|default('Liste') }}</h2>
+            <div class="flex gap-2">
+                {% if show_search is not defined or show_search %}
+                    <div class="form-control">
+                        <input type="text" placeholder="Rechercher..." class="input input-bordered input-sm w-full max-w-xs">
+                    </div>
+                {% endif %}
+                
+                {% if show_filter is defined and show_filter %}
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-sm btn-ghost">
+                            <i data-feather="filter" class="w-4 h-4"></i>
+                        </label>
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                            {% for filter in filters %}
+                                <li><a>{{ filter }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Tableau #}
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        {% if selectable is defined and selectable %}
+                            <th>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm">
+                                </label>
+                            </th>
+                        {% endif %}
+                        
+                        {% for header in headers %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+
+                        {% if show_actions is not defined or show_actions %}
+                            <th class="text-right">Actions</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr class="hover">
+                            {% if selectable is defined and selectable %}
+                                <td>
+                                    <label>
+                                        <input type="checkbox" class="checkbox checkbox-sm">
+                                    </label>
+                                </td>
+                            {% endif %}
+
+                            {% for field in fields %}
+                                <td>
+                                    {% if '.' in field %}
+                                        {% set relations = field|split('.') %}
+                                        {% set value = item %}
+                                        {% for rel in relations %}
+                                            {% if value is not null %}
+                                                {% set value = attribute(value, rel) %}
+                                            {% else %}
+                                                {% set value = '' %}
+                                            {% endif %}
+                                        {% endfor %}
+                                       {% if value.timestamp is defined %}
+                                            {{ value|date('d/m/Y') }}
+                                        {% else %}
+                                            {{ value }}
+                                        {% endif %}
+                                    {% else %}
+                                       {% set field_value = attribute(item, field) %}
+                                        {% if field_value.timestamp is defined %}
+                                            {{ field_value|date('d/m/Y') }}
+                                        {% else %}
+                                            {{ field_value }}
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+
+                            {% if show_actions is not defined or show_actions %}
+                                <td>
+                                    <div class="flex justify-end gap-2">
+                                        {% if show_view is not defined or show_view %}
+                                            <a href="{{ path(view_route, {'id': item.id}) }}" 
+                                               class="btn btn-ghost btn-sm tooltip" data-tip="Voir">
+                                                <i data-feather="eye" class="w-4 h-4"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if show_edit is not defined or show_edit %}
+                                            <a href="{{ path(edit_route, {'id': item.id}) }}" 
+                                               class="btn btn-ghost btn-sm tooltip" data-tip="Modifier">
+                                                <i data-feather="edit-2" class="w-4 h-4"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if show_delete is not defined or show_delete %}
+                                            <button class="btn btn-ghost btn-sm text-error tooltip" 
+                                                    data-tip="Supprimer" 
+                                                    onclick="confirmDelete({{ item.id }})">
+                                                <i data-feather="trash-2" class="w-4 h-4"></i>
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="{{ headers|length + (selectable is defined and selectable ? 1 : 0) + (show_actions is not defined or show_actions ? 1 : 0) }}" class="text-center py-12">
+                                <div class="flex flex-col items-center gap-4">
+                                    <i data-feather="list" class="w-16 h-16 text-gray-300"></i>
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-500">Aucun élément trouvé</h3>
+                                        <p class="text-gray-400">Commencez par ajouter votre premier élément</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# Pagination #}
+        {% if pagination is defined and pagination %}
+            <div class="flex items-center justify-between mt-4">
+                <div class="text-sm text-gray-500">
+                    Affichage de {{ pagination.total }} élément(s)
+                </div>
+                <div class="join">
+                    {% for page in 1..pagination.pages %}
+                        <button class="join-item btn btn-sm {% if page == pagination.current %}btn-active{% endif %}">{{ page }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>

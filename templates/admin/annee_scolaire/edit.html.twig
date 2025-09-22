@@ -1,14 +1,29 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Edit AnneeScolaire
-{% endblock %}
+{% block title %}Modifier Année Scolaire - School Management System{% endblock %}
+
+{% block page_title %}Modifier une Année Scolaire{% endblock %}
 
 {% block body %}
-	<h1>Edit AnneeScolaire</h1>
-
-	{{ include('admin/annee_scolaire/_form.html.twig', {'button_label': 'Update'}) }}
-
-	<a href="{{ path('app_annee_scolaire_index') }}">back to list</a>
-
-	{{ include('admin/annee_scolaire/_delete_form.html.twig') }}
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <h2 class="card-title">Informations de l'année scolaire</h2>
+            
+            {{ include('admin/annee_scolaire/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+            
+            <div class="card-actions justify-end mt-6">
+                <a href="{{ path('app_annee_scolaire_index') }}" class="btn btn-ghost">Annuler</a>
+                <button type="submit" class="btn btn-primary" form="annee_scolaire_form">Mettre à jour</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow mt-6">
+        <div class="card-body">
+            <h2 class="card-title text-error">Zone de danger</h2>
+            <p>La suppression d'une année scolaire est irréversible et peut affecter les inscriptions et les paiements associés.</p>
+            
+            {{ include('admin/annee_scolaire/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

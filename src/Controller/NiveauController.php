@@ -20,7 +20,7 @@ class NiveauController extends AbstractController
      */
     public function index(NiveauRepository $niveauRepository): Response
     {
-        return $this->render('admin/niveau/index.html.twig', [
+        return $this->render('niveau/index.html.twig', [
             'niveaux' => $niveauRepository->findAll(),
         ]);
     }

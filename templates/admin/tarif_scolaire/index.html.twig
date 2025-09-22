@@ -1,41 +1,32 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}TarifScolaire index{% endblock %}
+{% block title %}Tarifs Scolaires - School Management System{% endblock %}
+
+{% block page_title %}Tarifs Scolaires{% endblock %}
+
+{% block header_actions %}
+    <a href="{{ path('app_tarif_scolaire_new') }}" class="btn btn-primary">
+        <i data-feather="plus" class="w-4 h-4"></i>
+        Nouveau tarif
+    </a>
+{% endblock %}
 
 {% block body %}
-    <h1>TarifScolaire index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Montant_ecolage</th>
-                <th>Montant_inscription</th>
-                <th>Autres_frais</th>
-                <th>Description</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for tarif_scolaire in tarif_scolaires %}
-            <tr>
-                <td>{{ tarif_scolaire.id }}</td>
-                <td>{{ tarif_scolaire.montantEcolage }}</td>
-                <td>{{ tarif_scolaire.montantInscription }}</td>
-                <td>{{ tarif_scolaire.autresFrais }}</td>
-                <td>{{ tarif_scolaire.description }}</td>
-                <td>
-                    <a href="{{ path('app_tarif_scolaire_show', {'id': tarif_scolaire.id}) }}">show</a>
-                    <a href="{{ path('app_tarif_scolaire_edit', {'id': tarif_scolaire.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_tarif_scolaire_new') }}">Create new</a>
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="card-title">Liste des Tarifs Scolaires</h2>
+            </div>
+            
+            {% include 'generic/_list.html.twig' with {
+                'items': tarif_scolaires,
+                'headers': ['ID', 'Niveau', 'Année Scolaire', 'Écolage', 'Inscription', 'Autres Frais'],
+                'fields': ['id', 'niveau.nom', 'anneeScolaire.libelle', 'montantEcolage', 'montantInscription', 'autresFrais'],
+                'edit_route': 'app_tarif_scolaire_edit',
+                'delete_route': 'app_tarif_scolaire_delete',
+                'view_route': 'app_tarif_scolaire_show',
+                'show_view': true
+            } %}
+        </div>
+    </div>
 {% endblock %}

@@ -1,0 +1,19 @@
+{# templates/classe/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Classes{% endblock %}
+
+{% block body %}
+    <h1>Liste des Classes</h1>
+
+    {% include 'generic/_list.html.twig' with {
+        'items': classes,
+        'headers': ['ID', 'Nom', 'Niveau'],
+        'fields': ['id', 'nom', 'niveau.nom'],
+        'edit_route': 'classe_edit',
+        'delete_route': 'classe_delete'
+    } %}
+
+    <a href="{{ path('classe_new') }}" class="btn btn-primary">Ajouter une Classe</a>
+{% endblock %}

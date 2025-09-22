@@ -1,12 +1,20 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}New Niveau
-{% endblock %}
+{% block title %}Nouveau Niveau - School Management System{% endblock %}
+
+{% block page_title %}Ajouter un Niveau{% endblock %}
 
 {% block body %}
-	<h1>Create new Niveau</h1>
-
-	{{ include('admin/niveau/_form.html.twig') }}
-
-	<a href="{{ path('app_niveau_index') }}">back to list</a>
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <h2 class="card-title">Informations du niveau</h2>
+            
+            {{ include('admin/niveau/_form.html.twig') }}
+            
+            <div class="card-actions justify-end mt-6">
+                <a href="{{ path('app_niveau_index') }}" class="btn btn-ghost">Annuler</a>
+                <button type="submit" class="btn btn-primary" form="niveau_form">Créer le niveau</button>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -1,39 +1,61 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}AnneeScolaire
-{% endblock %}
+{% block title %}Détails Année Scolaire - School Management System{% endblock %}
+
+{% block page_title %}Détails de l'Année Scolaire{% endblock %}
 
 {% block body %}
-	<h1>AnneeScolaire</h1>
-
-	<table class="table">
-		<tbody>
-			<tr>
-				<th>Id</th>
-				<td>{{ annee_scolaire.id }}</td>
-			</tr>
-			<tr>
-				<th>Libelle</th>
-				<td>{{ annee_scolaire.libelle }}</td>
-			</tr>
-			<tr>
-				<th>Date_debut</th>
-				<td>{{ annee_scolaire.dateDebut ? annee_scolaire.dateDebut|date('Y-m-d') : '' }}</td>
-			</tr>
-			<tr>
-				<th>Date_fin</th>
-				<td>{{ annee_scolaire.dateFin ? annee_scolaire.dateFin|date('Y-m-d') : '' }}</td>
-			</tr>
-			<tr>
-				<th>Active</th>
-				<td>{{ annee_scolaire.active ? 'Yes' : 'No' }}</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<a href="{{ path('app_annee_scolaire_index') }}">back to list</a>
-
-	<a href="{{ path('app_annee_scolaire_edit', {'id': annee_scolaire.id}) }}">edit</a>
-
-	{{ include('admin/annee_scolaire/_delete_form.html.twig') }}
+    <div class="card bg-base-100 shadow">
+        <div class="card-body">
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <td>{{ annee_scolaire.id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Libellé</th>
+                            <td>{{ annee_scolaire.libelle }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de début</th>
+                            <td>{{ annee_scolaire.dateDebut ? annee_scolaire.dateDebut|date('d/m/Y') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Date de fin</th>
+                            <td>{{ annee_scolaire.dateFin ? annee_scolaire.dateFin|date('d/m/Y') : '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Active</th>
+                            <td>
+                                {% if annee_scolaire.active %}
+                                    <span class="badge badge-success">Oui</span>
+                                {% else %}
+                                    <span class="badge badge-error">Non</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card-actions justify-end mt-6">
+                <a href="{{ path('app_annee_scolaire_index') }}" class="btn btn-ghost">Retour à la liste</a>
+                <a href="{{ path('app_annee_scolaire_edit', {'id': annee_scolaire.id}) }}" class="btn btn-primary">
+                    <i data-feather="edit"></i>
+                    Modifier
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card bg-base-100 shadow mt-6">
+        <div class="card-body">
+            <h2 class="card-title text-error">Zone de danger</h2>
+            <p>La suppression d'une année scolaire est irréversible et peut affecter les inscriptions et les paiements associés.</p>
+            
+            {{ include('admin/annee_scolaire/_delete_form.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

@@ -1,4 +1,21 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'id': 'niveau_form', 'class': 'space-y-6'}}) }}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="form-control">
+            {{ form_label(form.nom, null, {'label_attr': {'class': 'label'}}) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            {{ form_errors(form.nom) }}
+        </div>
+        
+        <div class="form-control">
+            {{ form_label(form.ordre, null, {'label_attr': {'class': 'label'}}) }}
+            {{ form_widget(form.ordre, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            {{ form_errors(form.ordre) }}
+        </div>
+        
+        <div class="form-control md:col-span-2">
+            {{ form_label(form.description, null, {'label_attr': {'class': 'label'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'input input-bordered w-full'}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+    </div>
 {{ form_end(form) }}

@@ -1,14 +1,72 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin_base.html.twig' %}
 
-{% block title %}Edit TarifScolaire
-{% endblock %}
+{% block title %}Edit TarifScolaire{% endblock %}
 
 {% block body %}
-	<h1>Edit TarifScolaire</h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Modifier le Tarif Scolaire</h1>
+        <a href="{{ path('app_tarif_scolaire_index') }}" class="btn btn-ghost">
+            <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i>
+            Retour à la liste
+        </a>
+    </div>
 
-	{{ include('admin/tarif_scolaire/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Flash messages -->
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-error mb-6">
+            <i data-feather="alert-circle" class="w-4 h-4 mr-2"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
 
-	<a href="{{ path('app_tarif_scolaire_index') }}">back to list</a>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Edit Form -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Modifier Tarif Scolaire</h2>
+                {{ include('admin/tarif_scolaire/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+                
+                <div class="mt-4">
+                    <a href="{{ path('app_tarif_scolaire_index') }}" class="btn btn-ghost">Annuler</a>
+                </div>
+            </div>
+        </div>
 
-	{{ include('admin/tarif_scolaire/_delete_form.html.twig') }}
+        <!-- Existing Tariffs -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Tarifs Scolaires Existants</h2>
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra">
+                        <thead>
+                            <tr>
+                                <th>Niveau</th>
+                                <th>Année Scolaire</th>
+                                <th>Écolage</th>
+                                <th>Inscription</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tarif in tarif_scolaires %}
+                                <tr class="hover">
+                                    <td>{{ tarif.niveau.nom }}</td>
+                                    <td>{{ tarif.anneeScolaire.libelle }}</td>
+                                    <td>{{ tarif.montantEcolage }} Ar</td>
+                                    <td>{{ tarif.montantInscription }} Ar</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4" class="text-center">Aucun tarif scolaire trouvé</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mt-4">
+                    {{ include('admin/tarif_scolaire/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

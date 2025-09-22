@@ -1,0 +1,28 @@
+{# templates/niveau/index.html.twig #}
+
+{% extends 'admin_base.html.twig' %}
+
+{% block title %}Liste des Niveaux{% endblock %}
+
+{% block body %}
+
+
+    <h1 class="text-2xl font-bold">{% block page_title %}Liste des niveaux{% endblock %}</h1>
+
+    {# Inclusion du template générique avec les paramètres spécifiques #}
+    {% include 'generic/_list.html.twig' with {
+        'items': niveaux,
+        'headers': ['ID', 'Nom'],
+        'fields': ['id', 'nom'],
+        'edit_route': 'app_niveau_edit',
+        'view_route': 'app_niveau_show',
+        'delete_route': 'app_niveau_delete'
+    } %}
+
+    <a href="{{ path('app_niveau_new') }}" class="btn btn-primary">Ajouter un Niveau</a>
+
+    {# Tu peux ajouter ici du contenu personnalisé, des filtres, des statistiques, etc. #}
+    <div class="mt-4">
+        <p><strong>Total des niveaux :</strong> {{ niveaux|length }}</p>
+    </div>
+{% endblock %}
